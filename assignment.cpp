@@ -1,10 +1,9 @@
 /*
 ==============================================
-file name : cs213_A1_part1_sec7_20240743_20240758_20242116
+file name : cs213_A1_part1_ allB(sec27)_20242116_20242076
 team members :
-             - Esraa Ahmed Hassan     20240743   filter(1,4)
-             - Jana Yahia Mostafa     20240758   filter(2,5)
-             - Dalia Sami Abd El Aziz 20242116   filter(3,6)
+             - Dalia Sami Abd El Aziz 20242116 
+             -Bassant Mohammed Farouk 20242076             
 Description:
 This program applies different filters on an image.
 The user can choose a filter from a menu.
@@ -12,7 +11,9 @@ The user can choose a filter from a menu.
 */
 #include <iostream>
 #include "Image_Class.h"
-#include<set>
+#include<cmath>
+#include<vector>
+#include<algorithm>
 using namespace std;
 
 void convert_image(int c) {
@@ -26,18 +27,22 @@ void convert_image(int c) {
             
         case 1: // Grayscale
         {
-            for (int i = 0; i < image.width; ++i) {
-                for (int j = 0; j < image.height; ++j) {
-                    unsigned int avg = 0;
-                    for (int k = 0; k < image.channels; ++k) {
-                        avg += image(i, j, k);
-                    }
-                    avg = avg / 3;
-                    for (int k = 0; k < 3; ++k) {
-                        image(i, j, k) = avg;
-                    }
-                }
-            }
+            for(int i=0;i<image.width;i++)
+            {
+                 for(int j=0;j<image.height;j++)
+                    {
+                 for(int k=0;k<image.channels;k++)
+                   {
+                   
+                     y=image(i,j,k);
+                  }
+                  y=y/3;
+                  image(i,j,0)=y;
+                  image(i,j,1)=y;
+                  image(i,j,2)=y;
+
+               }
+               }
             cout << "Do you want to save image (yes or no)\n";
             cin >> s;
             if (s == "yes" || s == "YES") {
@@ -51,26 +56,46 @@ void convert_image(int c) {
             
         case 2: // Black & White
         {
-            for (int i = 0; i < image.width; ++i) {
-                for (int j = 0; j < image.height; ++j) {
-                    unsigned int avg = 0;
-                    for (int k = 0; k < image.channels; ++k) {
-                        avg += image(i, j, k);
-                    }
-                    avg = avg / 3;
-                    for (int k = 0; k < 3; ++k) {
-                        image(i, j, k) = avg;
-                    }
-                }
-            }
-            for (int i = 0; i < image.width; ++i) {
-                for (int j = 0; j < image.height; ++j) {
-                    for (int k = 0; k < image.channels; ++k) {
-                        if (image(i, j, k) >= 128) image(i, j, k) = 255;
-                        else image(i, j, k) = 0;
-                    }
-                }
-            }
+             for(int i=0;i<image.width;i++)
+            {
+                 for(int j=0;j<image.height;j++)
+                    {
+                 for(int k=0;k<image.channels;k++)
+                   {
+                   
+                     y=image(i,j,k);
+                  }
+                  y=y/3;
+                  image(i,j,0)=y;
+                  image(i,j,1)=y;
+                  image(i,j,2)=y;
+
+               }
+               }
+            for(int i=0;i<image.width;i++)
+            {
+                 for(int j=0;j<image.height;j++)
+                    {
+                 for(int k=0;k<image.channels;k++)
+                   {
+                       y=image(i,j,k);
+         
+                  }
+                
+                 if(y<127){
+                     image(i,j,0)+=y;
+                     image(i,j,1)+=y;
+                     image(i,j,2)+=y;
+                  }
+                  else if (y>127){
+                      image(i,j,0)=255;
+                     image(i,j,1)=255;
+                     image(i,j,2)=255;
+                  }
+
+               }
+               }
+
             cout << "Do you want to save image (yes or no)\n";
             cin >> s;
             if (s == "yes" || s == "YES") {
@@ -103,7 +128,8 @@ void convert_image(int c) {
             break;
         }
             
-        case 4: // Merge
+ case 4:   
+ // Merge
         {
             cout << "Upload 2nd Image\n";
             string filename;
@@ -112,27 +138,20 @@ void convert_image(int c) {
             Image resized(image.width, image.height);
             for (int i = 0; i < image.width; i++) {
                 for (int j = 0; j < image.height; j++) {
-                    int x = (i * image2.width) / image.width;
-                    int y = (j * image2.height) / image.height;
-                    for (int k = 0; k < image.channels; k++) {
-                        resized(i, j, k) = image2(x, y, k);
+                    for(int k=0;k<3;k++)
+                    {
+                      resized(i,j,k)=image(i,j,k)*.6 + image2(i,j,k)*.4 ;
                     }
                 }
             }
-            for (int i = 0; i < image.width; i++) {
-                for (int j = 0; j < image.height; j++) {
-                    for (int k = 0; k < 3; k++) {
-                        image(i, j, k) = (image(i, j, k) + resized(i, j, k)) / 2;
-                    }
-                }
-            }
+          
             cout << "Do you want to save image (yes or no)\n";
             cin >> s;
             if (s == "yes" || s == "YES") {
                 cout << "Pls enter image name to store new image\n";
                 cout << "and specify extension .jpg, .bmp, .png, .tga:\n ";
                 cin >> t;
-                image.saveImage(t);
+                resized.saveImage(t);
             }
             break;
         }
@@ -237,9 +256,9 @@ void convert_image(int c) {
                     for (int k = 0; k < image.channels; k++) {
                         int value = image(i, j, k);
                         if (x == 1) {
-                            value = value * 0.5;
+                            value = value *.4;
                         } else if (x == 2) {
-                            value = value * 1.5;
+                            value = value * 2;
                         }
                         if (value > 255) value = 255;
                         if (value < 0) value = 0;
@@ -288,6 +307,7 @@ void convert_image(int c) {
             }
             break;
         }
+        
         case 9: // frame
         {
             cout<<"How do you want to Frame ?\n"<<"1- purred\n"<<"2-baster\n";
@@ -471,30 +491,69 @@ void convert_image(int c) {
             
         }
         case 10: // Detect Image Edges
-        {
-            for (int i = 0; i < image.width; i++) {
-                for (int j = 0; j < image.height; j++) {
-                    unsigned int avg = 0;
-                    for (int k = 0; k < image.channels; k++) {
-                        avg += image(i, j, k);
-                    }
-                    avg = avg / 3;
-                    for (int k = 0; k < 3; k++) {
-                        image(i, j, k) = avg;
-                    }
-                }
-            }
+        {  for(int i=0;i<image.width;i++)
+            {
+                 for(int j=0;j<image.height;j++)
+                    {
+                 for(int k=0;k<image.channels;k++)
+                   {
+                   
+                     y=image(i,j,k);
+                  }
+                  y=y/3;
+                  image(i,j,0)=y;
+                  image(i,j,1)=y;
+                  image(i,j,2)=y;
+
+               }
+               }
+            for(int i=0;i<image.width;i++)
+            {
+                 for(int j=0;j<image.height;j++)
+                    {
+                 for(int k=0;k<image.channels;k++)
+                   {
+                       y=image(i,j,k);
+         
+                  }
+                
+                 if(y<127){
+                     image(i,j,0)+=y;
+                     image(i,j,1)+=y;
+                     image(i,j,2)+=y;
+                  }
+                  else if (y>127){
+                      image(i,j,0)=255;
+                     image(i,j,1)=255;
+                     image(i,j,2)=255;
+                  }
+
+               }
+               }
             Image edgeImg = image;
             for (int i = 0; i < image.width - 1; i++) {
                 for (int j = 0; j < image.height - 1; j++) {
                     int current = image(i, j, 0);
-                    int right = image(i + 1, j, 0);
-                    int down = image(i, j + 1, 0);
-                    int diff = abs(current - right) + abs(current - down);
-                    int edgeValue = (diff > 50) ? 0 : 255;
-                    for (int k = 0; k < 3; k++) {
-                        edgeImg(i, j, k) = edgeValue;
+                    if(i-1 >=0)
+                    {
+                            int top     = image(i-1, j, 0);
+                            int right = image(i + 1, j, 0);
+                            int down = image(i, j + 1, 0);
+                            int diff = abs(current - right) + abs(current - down);
+
+                    if(diff >=30)
+                    {
+                        edgeImg(i, j, 0)=0;
+                        edgeImg(i, j, 1)=0;
+                        edgeImg(i, j, 2)=0;
                     }
+                    else {
+                        edgeImg(i, j, 0)=255;
+                        edgeImg(i, j, 1)=255;
+                        edgeImg(i, j, 2)=255;
+                    }
+                    }
+                 
                 }
             }
             image = edgeImg;
@@ -612,21 +671,16 @@ void convert_image(int c) {
             cout << "Fixing sunlight like Wano filter..." << endl;
             for (int i = 0; i < image.width; i++) {
                 for (int j = 0; j < image.height; j++) {
-                    int r = image(i, j, 0);
-                    int g = image(i, j, 1);
-                    int b = image(i, j, 2);
+                   
+                   image(i, j, 0) =image(i, j, 0) * 1.4 + 30;
+                   image(i, j, 1) = image(i, j, 1)* 1.2 + 15;
+                     image(i, j, 2)=  image(i, j, 2) * 0.8;
                     
-                    r = r * 1.3 + 20;
-                    g = g * 1.15 + 10;
-                    b = b * 0.9;
+                    if (image(i, j, 0) > 255) image(i, j, 0) = 255;
+                    if ( image(i, j, 1) > 255)  image(i, j, 1) = 255;
+                    if ( image(i, j, 2) > 255)  image(i, j, 2)= 255;
                     
-                    if (r > 255) r = 255;
-                    if (g > 255) g = 255;
-                    if (b > 255) b = 255;
-                    
-                    image(i, j, 0) = r;
-                    image(i, j, 1) = g;
-                    image(i, j, 2) = b;
+                  
                 }
             }
             
@@ -646,13 +700,13 @@ void convert_image(int c) {
             cout << "Enter degree of vertical skew:\n";
             cin >> degree;
 
-            double rad = degree * 3.14159265 / 180.0;
-            int shiftMax = (int)(tan(rad) * image.height);
+            double r= degree * 3.14159265 / 180.0;
+            int shiftMax = (int)(tan(r) * image.height);
 
             Image newimg(image.width + abs(shiftMax), image.height);
 
             for (int j = 0; j < image.height; j++) {
-                int shift = (int)(tan(rad) * j);
+                int shift = (int)(tan(r) * j);
                 for (int i = 0; i < image.width; i++) {
                     for (int k = 0; k < image.channels; k++) {
                         int newX = i + shift;
@@ -702,7 +756,7 @@ void convert_image(int c) {
             }
             break;
         }
-                 case 16:
+                case 16:    //oil painting
         {
 
          
@@ -711,10 +765,7 @@ void convert_image(int c) {
                 
                 for(int j=0;j<image.height;j++)
                 {
-                    int p=0;
-                    int o=0;
-                    int u=0;
-                    int a=0;
+                   vector<int>R,G,B;
                     
                     int b=i-3;
                     int c=i+3;
@@ -739,30 +790,29 @@ void convert_image(int c) {
                         
                         for(int q=l;q<=v;q++)
                         {
-                            p+=image(k,q,0);
-                            o+=image(k,q,1);
-                            u+=image(k,q,2);
-                            a++;
+                            for (int u=0;u<3;u++)
+                            {
+                               R.push_back(image(k,q,0));
+                               G.push_back(image(k,q,1));
+                               B.push_back(image(k,q,2));
+                            }
                         }
                     
                      
                     }
-                    image(i,j,0)=p/a;
-                    image(i,j,1)=o/a;
-                    image(i,j,2)=u/a;
-             
+                  
+                    sort(R.begin(),R.end());
+                    sort(G.begin(),G.end());
+                    sort(B.begin(),B.end());
+                    int size =R.size()/2;
+                    image(i,j,0)=R[size];
+                    image(i,j,1)=G[size];
+                    image(i,j,2)=B[size];
 
                 }
                 
             }
-             for (int i = 0; i < image.width; i++) {
-                for (int j = 0; j < image.height; j++) {
-                   
-                     image(i, j, 1)*=.8;
-              
-                  
-                }
-            }
+          
            cout<<"do you want to save image (yes or no) \n";
                 cin>>s;
                 if(s=="yes" || s=="YES" || s=="Yes" || s=="YeS" || s=="yES"|| s=="YEs"|| s=="yeS"|| s=="yEs"){
@@ -777,7 +827,7 @@ void convert_image(int c) {
       }
         break;    
         } 
-        case 17:
+        case 17:   //infrared photographyn   الاشعه تحت الحمراء
         {
            for(int i=0;i<image.width ;i++){
             
@@ -809,9 +859,8 @@ void convert_image(int c) {
       }
          break;
         }
-      
-   
-        case 18:
+  
+        case 18:   //old_tv
         {
             int u=0;
            for(int i=0;i<image.width ;i++){
@@ -850,9 +899,80 @@ void convert_image(int c) {
       }
          break;
         }
-       /*
-       case 18:   //tv onther code
-        {
+ 
+      case 19:   // vignette      ظل ناعم حوالين الصوره 
+        { 
+       
+            
+          float dis , maxdis , dx , dy , h , dark ; 
+                int center_X,center_Y;
+                center_X = (image.width - 1) / 4;
+                center_Y = (image.height - 1) / 4;
+                maxdis = sqrt(center_X * center_X + center_Y * center_Y);  //max_distance to center
+           for(int i=0;i<image.width ;i++){
+            
+             for(int j=0;j<image.height ;j++)
+             {
+               
+                dx = i - center_X;
+                dy = j - center_Y;
+                dis=sqrt(dx * dx + dy * dy);
+                h= dis / maxdis;
+                dark = 1 - ( h * h);
+                if(dark < 0)   dark = 0;
+               for(int k=0;k<image.channels ;k++)
+               {
+                image(i,j,k) = image(i,j,k) * dark;
+                if (image(i, j, k) > 255) image(i, j, k) = 255;
+                if (image(i, j, k) < 0) image(i, j, k) = 0;
+               }
+            }
+        }
+           cout<<"do you want to save image (yes or no) \n";
+                cin>>s;
+                if(s=="yes" || s=="YES" || s=="Yes" || s=="YeS" || s=="yES"|| s=="YEs"|| s=="yeS"|| s=="yEs"){
+                        cout << "Pls enter image name to store new image\n";
+                         cout << "and specify extension .jpg, .bmp, .png, .tga: \n";
+
+                      cin >> t;
+               
+                 image.saveImage(t);
+               
+            
+        }
+        break;
+    }
+    case  20:    //increacing blue im image    
+    {
+
+           for(int i=0;i<image.width ;i++){
+            
+             for(int j=0;j<image.height ;j++)
+             {
+               
+               
+               for(int k=0;k<image.channels ;k++)
+               {
+                    image(i,j,2)=255;
+               }
+            }
+        }
+           cout<<"do you want to save image (yes or no) \n";
+                cin>>s;
+                if(s=="yes" || s=="YES" || s=="Yes" || s=="YeS" || s=="yES"|| s=="YEs"|| s=="yeS"|| s=="yEs"){
+                        cout << "Pls enter image name to store new image\n";
+                         cout << "and specify extension .jpg, .bmp, .png, .tga: \n";
+
+                      cin >> t;
+               
+                 image.saveImage(t);
+               
+            
+        }
+        break;
+    }
+    case 21:    //contrast    عمل تباين اللون تقيل الفرق بين الالوان
+    {
              for(int i=0;i<image.width ;i++){
             
              for(int j=0;j<image.height ;j+=3)
@@ -879,44 +999,55 @@ void convert_image(int c) {
         }
         break;
     }
-       */ 
-      case 19:
-        { 
-            cout<<"1#most  2#least\n";
-            int g;
-            cin>>g;
-            if(g==2)
-            {
- for(int i=0;i<image.width ;i++){
+    case 22:    //blur only body    بعمل بلور فقط للوجه او الجسم
+    {
+          float dis , maxdis , dx , dy , h  ; 
+                int center_X,center_Y ,radius ;
+                center_X = (image.width - 1) /2;
+                center_Y = (image.height - 1) /2;
+                maxdis = sqrt(center_X * center_X + center_Y * center_Y);  //max_distance to center
+           for(int i=0;i<image.width ;i++){
             
-             for(int j=0;j<image.height ;j+=3)
+             for(int j=0;j<image.height ;j++)
              {
-               for(int k=0;k<image.channels ;k++)
-               {
-                image(i,j,0)=((image(i,j,0)-128)*.7)+128;
-                image(i,j,1)=((image(i,j,1)-128)*.7)+128;
-                image(i,j,2)=((image(i,j,2)-128)*.7)+128;
-               }
+               
+                dx = i - center_X;
+                dy = j - center_Y;
+                dis=sqrt(dx * dx + dy * dy);
+                h= dis / maxdis;
+                if(h<.3)  radius=15;
+                else if (h<.8) radius=7;
+                else              radius=0;
+                if(radius==0)   
+                {
+                    image(i,j,0)= image(i,j,0);
+                    image(i,j,1)= image(i,j,1);
+                    image(i,j,2)= image(i,j,2);
+                    continue;
+                }
+                if(i-radius >=0  && i+radius<=image.width-1)
+                {
+                    if(j-radius >=0  && j+radius<=image.height-1)
+                { 
+                    int p=0,o=0,u=0,a=0;
+                    for(int m=i-radius;m<i+radius ;m++){
+            
+                     for(int n=j-radius;n<j+radius ;n++)
+                     {
+                            p+=image(m,n,0);
+                            o+=image(m,n,1);
+                            u+=image(m,n,2);
+                            a++;
+                     }
+                }
+                    image(i,j,0)=p/a;
+                    image(i,j,1)=o/a;
+                    image(i,j,2)=u/a;
+                }
+                }
+                 
             }
         }
-          
-            }
-                  if(g==1)
-            {
- for(int i=0;i<image.width ;i++){
-            
-             for(int j=0;j<image.height ;j+=3)
-             {
-               for(int k=0;k<image.channels ;k++)
-               {
-                image(i,j,0)=((image(i,j,0)-128)*1.4)+128;
-                image(i,j,1)=((image(i,j,1)-128)*1.4)+128;
-                image(i,j,2)=((image(i,j,2)-128)*1.4)+128;
-               }
-            }
-        }
-          
-            }
            cout<<"do you want to save image (yes or no) \n";
                 cin>>s;
                 if(s=="yes" || s=="YES" || s=="Yes" || s=="YeS" || s=="yES"|| s=="YEs"|| s=="yeS"|| s=="yEs"){
@@ -931,6 +1062,99 @@ void convert_image(int c) {
         }
         break;
     }
+    case 23:    //portrait blur   بنسيب الشخص و نعمل بلور لباقي الصوره 
+    {
+                float dis , maxdis , dx , dy , h , dark ; 
+                int center_X,center_Y ,radius ;
+                center_X = (image.width - 1) / 2;
+                center_Y = (image.height - 1) / 2;
+                maxdis = sqrt(center_X * center_X + center_Y * center_Y);  //max_distance to center
+           for(int i=0;i<image.width ;i++){
+            
+             for(int j=0;j<image.height ;j++)
+             {
+               
+                dx = i - center_X;
+                dy = j - center_Y;
+                dis=sqrt(dx * dx + dy * dy);
+                h= dis / maxdis;
+                if(h<.3)  radius=0;
+                else if (h<.8) radius=3;
+                else              radius=6;
+                if(radius==0)   
+                {
+                    image(i,j,0)= image(i,j,0);
+                    image(i,j,1)= image(i,j,1);
+                    image(i,j,2)= image(i,j,2);
+                    continue;
+                }
+                if(i-radius >=0  && i+radius<=image.width-1)
+                {
+                    if(j-radius >=0  && j+radius<=image.height-1)
+                {
+                    int p=0,o=0,u=0,a=0;
+                    for(int m=i-radius;m<i+radius ;m++){
+            
+                     for(int n=j-radius;n<j+radius ;n++)
+                     {
+                            p+=image(m,n,0);
+                            o+=image(m,n,1);
+                            u+=image(m,n,2);
+                            a++;
+                     }
+                }
+                    image(i,j,0)=p/a;
+                    image(i,j,1)=o/a;
+                    image(i,j,2)=u/a;
+                }
+                }
+                 
+            }
+        }
+           cout<<"do you want to save image (yes or no) \n";
+                cin>>s;
+                if(s=="yes" || s=="YES" || s=="Yes" || s=="YeS" || s=="yES"|| s=="YEs"|| s=="yeS"|| s=="yEs"){
+                        cout << "Pls enter image name to store new image\n";
+                         cout << "and specify extension .jpg, .bmp, .png, .tga: \n";
+
+                      cin >> t;
+               
+                 image.saveImage(t);
+               
+            
+        }
+        break;
+    }
+     case  24:    //increacing green im image   رؤيه ليليه باللون الاخضر
+    {
+
+           for(int i=0;i<image.width ;i++){
+            
+             for(int j=0;j<image.height ;j++)
+             {
+               
+               
+               for(int k=0;k<image.channels ;k++)
+               {
+                    image(i,j,1)=255;
+               }
+            }
+        }
+           cout<<"do you want to save image (yes or no) \n";
+                cin>>s;
+                if(s=="yes" || s=="YES" || s=="Yes" || s=="YeS" || s=="yES"|| s=="YEs"|| s=="yeS"|| s=="yEs"){
+                        cout << "Pls enter image name to store new image\n";
+                         cout << "and specify extension .jpg, .bmp, .png, .tga: \n";
+
+                      cin >> t;
+               
+                 image.saveImage(t);
+               
+            
+        }
+        break;
+    }
+
 }
         }
         
@@ -953,16 +1177,21 @@ void convert_image(int c) {
                     cout << "13- Wano Sunlight Fix\n";
                     cout << "14- Skew image \n";
                     cout << "15- purple at night\n";
-                    cout<<  "16-oil\n";
+                    cout<<  "16-oil painting\n";
                     cout<<  "17-infrared photographyn\n";
-                    cout<<  "18-tv\n";
-                    cout<<  "19-contrast\n";
-                    cout << "21- Exit\n";
+                    cout<<  "18-old_tv\n";
+                    cout<<  "19-vignette \n";
+                    cout<<  "20-increacing blue im image \n";
+                    cout<<  "21-contrast\n";
+                    cout<<  "22-blur only body\n";
+                    cout<<  "23-portrait blur\n";
+                    cout << "24- increacing green im image\n";
+                    cout<<  "25-Exist\n";
                     cout << "What do you want?\n";
                     cin >> c;
-                    if (c == 21) break;
+                    if (c == 25) break;
                     convert_image(c)
                                   
                                   ;
-                } while (c != 21);
+                } while (c != 25);
             }
